@@ -1,0 +1,10 @@
+name: cloud_datastore_sample
+version: 0.1.0
+description: A sample application showing the use of Cloud Datastore
+dependencies:
+  appengine:
+    path: ../../appengine
+  cloud_datastore:
+    path: ../../cloud_datastore
+  mustache: any
+  route: any
