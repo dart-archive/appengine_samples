@@ -6,6 +6,11 @@ name: simple_request_response_sample
 version: 0.1.0
 description: A sample application only serving client requests.
 dependencies:
+  appengine: any
+dependency_overrides:
   appengine:
     path: ../../appengine
-  route: any
+  cloud_datastore:
+    path: ../../cloud_datastore
+  memcache:
+    path: ../../memcache

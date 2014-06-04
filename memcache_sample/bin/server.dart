@@ -2,14 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
 import 'package:appengine/appengine.dart';
 import 'package:memcache/memcache.dart';
 
-import 'package:route/server.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
 final MAIN_PAGE = mustache.parse("""
@@ -76,8 +74,7 @@ serveMustache(HttpRequest request) {
 }
 
 main() {
-  runAppEngine().then((Stream<HttpRequest> requestStream) {
-    var router = new Router(requestStream)
-        ..defaultStream.listen(serveMustache);
+  runAppEngine(serveMustache).then((_) {
+    // Server running.
   });
 }

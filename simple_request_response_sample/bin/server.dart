@@ -2,12 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
 import 'package:appengine/appengine.dart';
-import 'package:route/server.dart';
 
 printHeaders(HttpRequest request) {
   var headers = request.headers;
@@ -52,11 +50,18 @@ sendResponse(HttpResponse response, int statusCode, String message) {
   response.close();
 }
 
+requestHandler(HttpRequest request) {
+  if (request.uri.path == '/_utils/headers') {
+    printHeaders(request);
+  } else if (request.uri.path == '/_utils/environment') {
+    printEnvironment(request);
+  } else {
+    defaultHandler(request);
+  }
+}
+
 main() {
-  runAppEngine().then((Stream<HttpRequest> requestStream) {
-    var router = new Router(requestStream)
-        ..serve(new UrlPattern(r'/_utils/headers')).listen(printHeaders)
-        ..serve(new UrlPattern(r'/_utils/environment')).listen(printEnvironment)
-        ..defaultStream.listen(defaultHandler);
+  runAppEngine(requestHandler).then((_) {
+    // Server running.
   });
 }

@@ -7,9 +7,13 @@ description: A sample application showing the use of memcache.
 version: 0.1.0
 
 dependencies:
-  route: any
   mustache: any
+  appengine: any
+  memcache: any
+dependency_overrides:
   appengine:
     path: ../../appengine
+  cloud_datastore:
+    path: ../../cloud_datastore
   memcache:
     path: ../../memcache

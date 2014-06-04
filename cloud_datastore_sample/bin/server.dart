@@ -8,7 +8,6 @@ import 'dart:convert';
 
 import 'package:appengine/appengine.dart';
 import 'package:cloud_datastore/cloud_datastore.dart';
-import 'package:route/server.dart' show Router;
 import 'package:mustache/mustache.dart' as mustache;
 
 final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
@@ -120,8 +119,7 @@ sendResponse(HttpResponse response, String message) {
 }
 
 main() {
-  runAppEngine().then((Stream<HttpRequest> requestStream) {
-    var router = new Router(requestStream)
-      ..defaultStream.listen(serveMainPage);
+  runAppEngine(serveMainPage).then((_) {
+    // Server running.
   });
 }
