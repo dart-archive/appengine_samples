@@ -3,6 +3,12 @@ Dart App Engine samples
 
 This repository contains a set of samples for Dart running on App Engine.
 
+Before running a sample make sure to execute
+
+    pub get
+
+inside that sample directory to have all the dependent packages available.
+
 Simple request response sample
 ------------------------------
 This sample shows the basic request handling. Start it locally using:
