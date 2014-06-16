@@ -10,7 +10,7 @@ import 'package:memcache/memcache.dart';
 
 import 'package:mustache/mustache.dart' as mustache;
 
-final MAIN_PAGE = mustache.parse("""
+final _MAIN_PAGE = mustache.parse("""
 <html>
   <head>
     <title>Main page</title>
@@ -40,7 +40,7 @@ final MAIN_PAGE = mustache.parse("""
 </html>
 """);
 
-sendResponse(HttpResponse response, int statusCode, String message,
+void _sendResponse(HttpResponse response, int statusCode, String message,
              {bool isHtml: false}) {
   var data = UTF8.encode(message);
   response.headers.contentType =
@@ -52,7 +52,7 @@ sendResponse(HttpResponse response, int statusCode, String message,
   response.close();
 }
 
-serveMustache(HttpRequest request) {
+void _serveMustache(HttpRequest request) {
   Memcache memcache = contextFromRequest(request).services.memcache;
 
   request.drain().then((_) {
@@ -66,15 +66,15 @@ serveMustache(HttpRequest request) {
 
       memcache.set('users', JSON.encode(users)).then((_) {
         var buffer = new StringBuffer();
-        MAIN_PAGE.render(users, buffer);
-        sendResponse(request.response, HttpStatus.OK, "$buffer", isHtml: true);
+        _MAIN_PAGE.render(users, buffer);
+        _sendResponse(request.response, HttpStatus.OK, "$buffer", isHtml: true);
       });
     });
   });
 }
 
-main() {
-  runAppEngine(serveMustache).then((_) {
+void main() {
+  runAppEngine(_serveMustache).then((_) {
     // Server running.
   });
 }

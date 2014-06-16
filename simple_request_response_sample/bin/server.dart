@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:appengine/appengine.dart';
 
-printHeaders(HttpRequest request) {
+void _printHeaders(HttpRequest request) {
   var headers = request.headers;
   request.drain().then((_) {
     var buffer = new StringBuffer();
@@ -16,30 +16,30 @@ printHeaders(HttpRequest request) {
     headers.forEach((String name, List<String> values) {
       buffer.writeln("  $name : [${values.join(', ')}]");
     });
-    sendResponse(request.response, HttpStatus.OK, buffer.toString());
+    _sendResponse(request.response, HttpStatus.OK, buffer.toString());
   });
 }
 
-printEnvironment(HttpRequest request) {
+void _printEnvironment(HttpRequest request) {
   var headers = request.headers;
   request.drain().then((_) {
     var buffer = new StringBuffer();
     for (var key in Platform.environment.keys) {
       buffer.writeln('$key="${Platform.environment[key]}"');
     }
-    sendResponse(request.response, HttpStatus.OK, buffer.toString());
+    _sendResponse(request.response, HttpStatus.OK, buffer.toString());
   });
 }
 
-defaultHandler(HttpRequest request) {
+void _defaultHandler(HttpRequest request) {
   request.drain().then((_) {
-    sendResponse(request.response,
+    _sendResponse(request.response,
                  HttpStatus.NOT_FOUND,
                  "Hello world from dart application.");
   });
 }
 
-sendResponse(HttpResponse response, int statusCode, String message) {
+void _sendResponse(HttpResponse response, int statusCode, String message) {
   var data = UTF8.encode(message);
   response.headers.contentType =
       new ContentType('text', 'plain', charset: 'charset=utf-8');
@@ -50,18 +50,18 @@ sendResponse(HttpResponse response, int statusCode, String message) {
   response.close();
 }
 
-requestHandler(HttpRequest request) {
+void _requestHandler(HttpRequest request) {
   if (request.uri.path == '/_utils/headers') {
-    printHeaders(request);
+    _printHeaders(request);
   } else if (request.uri.path == '/_utils/environment') {
-    printEnvironment(request);
+    _printEnvironment(request);
   } else {
-    defaultHandler(request);
+    _defaultHandler(request);
   }
 }
 
-main() {
-  runAppEngine(requestHandler).then((_) {
+void main() {
+  runAppEngine(_requestHandler).then((_) {
     // Server running.
   });
 }

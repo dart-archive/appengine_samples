@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appengine/appengine.dart';
 import 'package:cloud_datastore/cloud_datastore.dart';
@@ -38,7 +38,7 @@ final MAIN_PAGE = mustache.parse('''
 </html>
 ''');
 
-Map convertGreeting(Greeting g) {
+Map _convertGreeting(Greeting g) {
   return {'date' : g.date, 'author' : g.author, 'content' : g.content};
 }
 
@@ -58,7 +58,7 @@ class GreetingDesc extends ModelDescription {
   const GreetingDesc() : super('Greeting');
 }
 
-serveMainPage(HttpRequest request) {
+Future _serveMainPage(HttpRequest request) {
   var context = contextFromRequest(request);
   var db = context.services.db;
   var logging = context.services.logging;
@@ -86,11 +86,11 @@ serveMainPage(HttpRequest request) {
   Future showGreetingList() {
     return queryEntries().then((List<Greeting> greetings) {
       var renderMap = {
-        'entries' : greetings.map(convertGreeting).toList(),
+        'entries' : greetings.map(_convertGreeting).toList(),
         'user' : users.currentUser.email,
       };
       logging.info('Sending list of greetings back.');
-      return sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
+      return _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
     });
   }
 
@@ -109,17 +109,18 @@ serveMainPage(HttpRequest request) {
   }
 }
 
-sendResponse(HttpResponse response, String message) {
-  return (response
+Future _sendResponse(HttpResponse response, String message) {
+  response
       ..headers.contentType = HTML
       ..headers.set("Cache-Control", "no-cache")
       ..statusCode = HttpStatus.OK
-      ..add(UTF8.encode(message)))
-      .close();
+      ..add(UTF8.encode(message));
+
+  return response.close();
 }
 
-main() {
-  runAppEngine(serveMainPage).then((_) {
+void main() {
+  runAppEngine(_serveMainPage).then((_) {
     // Server running.
   });
 }

@@ -4,7 +4,7 @@ description: A sample application showing the use of Cloud Datastore
 dependencies:
   appengine: any
   cloud_datastore: any
-  mustache: any
+  mustache: '>=0.1.8 <0.2.0'
 dependency_overrides:
   appengine:
     path: ../../appengine
