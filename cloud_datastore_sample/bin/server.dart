@@ -59,7 +59,6 @@ class GreetingDesc extends ModelDescription {
 }
 
 Future _serveMainPage(HttpRequest request) {
-  var context = contextFromRequest(request);
   var db = context.services.db;
   var logging = context.services.logging;
 

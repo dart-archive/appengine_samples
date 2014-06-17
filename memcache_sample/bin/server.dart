@@ -53,7 +53,7 @@ void _sendResponse(HttpResponse response, int statusCode, String message,
 }
 
 void _serveMustache(HttpRequest request) {
-  Memcache memcache = contextFromRequest(request).services.memcache;
+  Memcache memcache = context.services.memcache;
 
   request.drain().then((_) {
     var newUser = request.uri.queryParameters['user'];
