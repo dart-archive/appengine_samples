@@ -62,28 +62,25 @@ Future _serveMainPage(HttpRequest request) {
   var db = context.services.db;
   var logging = context.services.logging;
 
+  // We will place all Greeting entries under this key. This allows us to do
+  // strongly consistent ancestor queries as opposed to eventually consistent
+  // queries.
+  var rootKey = db.emptyKey.append(Greeting, id: 1);
+
   logging.debug('Got request ${request.uri} .');
   var users = context.services.users;
 
   if (users.currentUser == null) {
     return users.createLoginUrl('${request.uri}').then((String url) {
-      logging.info('Redirecting user to login $url !');
+      logging.info('Redirecting user to login $url.');
       return request.response.redirect(Uri.parse(url));
     });
   }
 
-  Future saveGreeting(Greeting greeting) {
-    logging.info('Store greeting to datastore..');
-    return db.commit(inserts: [greeting]);
-  }
-
-  Future<List<Greeting>> queryEntries() {
+  if (request.method == 'GET') {
     logging.info('Fetch greetings from datastore.');
-    return (db.query(Greeting)..order('date')).run();
-  }
-
-  Future showGreetingList() {
-    return queryEntries().then((List<Greeting> greetings) {
+    var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
+    return query.run().then((List<Greeting> greetings) {
       var renderMap = {
         'entries' : greetings.map(_convertGreeting).toList(),
         'user' : users.currentUser.email,
@@ -91,19 +88,18 @@ Future _serveMainPage(HttpRequest request) {
       logging.info('Sending list of greetings back.');
       return _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
     });
-  }
-
-  if (request.method == 'GET') {
-    return showGreetingList();
   } else {
-    return request.transform(UTF8.decoder).fold('', (a,b) => '$a$b').then((c) {
-      var parms = Uri.splitQueryString(c);
+    return request.transform(UTF8.decoder).join('').then((String formData) {
+      var parms = Uri.splitQueryString(formData);
       var greeting = new Greeting()
-          ..parentKey = db.emptyKey
+          ..parentKey = rootKey
           ..author = parms['author'] + ' (${users.currentUser.email})'
           ..content  = parms['text']
           ..date = new DateTime.now();
-      return saveGreeting(greeting).then((_) => showGreetingList());
+      logging.info('Store greeting to datastore ...');
+      return db.commit(inserts: [greeting]).then((_) {
+        return request.response.redirect(request.uri);
+      });
     });
   }
 }
