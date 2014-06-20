@@ -104,7 +104,7 @@ void _serveMainPage(HttpRequest request) {
   }
 }
 
-void _sendResponse(HttpResponse response, String message) {
+Future _sendResponse(HttpResponse response, String message) {
   response
       ..headers.contentType = HTML
       ..headers.set("Cache-Control", "no-cache")
