@@ -21,12 +21,22 @@ void _printHeaders(HttpRequest request) {
 }
 
 void _printEnvironment(HttpRequest request) {
-  var headers = request.headers;
   request.drain().then((_) {
     var buffer = new StringBuffer();
     for (var key in Platform.environment.keys) {
       buffer.writeln('$key="${Platform.environment[key]}"');
     }
+    _sendResponse(request.response, HttpStatus.OK, buffer.toString());
+  });
+}
+
+void _printVersion(HttpRequest request) {
+  request.drain().then((_) {
+    var buffer = new StringBuffer();
+    buffer.writeln('Dart version: ${Platform.version}');
+    buffer.writeln('Dart executable: ${Platform.executable}');
+    buffer.writeln(
+        'Dart executable arguments: ${Platform.executableArguments}');
     _sendResponse(request.response, HttpStatus.OK, buffer.toString());
   });
 }
@@ -55,6 +65,8 @@ void _requestHandler(HttpRequest request) {
     _printHeaders(request);
   } else if (request.uri.path == '/_utils/environment') {
     _printEnvironment(request);
+  } else if (request.uri.path == '/_utils/version') {
+    _printVersion(request);
   } else {
     _defaultHandler(request);
   }

@@ -58,7 +58,7 @@ class GreetingDesc extends ModelDescription {
   const GreetingDesc() : super('Greeting');
 }
 
-Future _serveMainPage(HttpRequest request) {
+void _serveMainPage(HttpRequest request) {
   var db = context.services.db;
   var logging = context.services.logging;
 
@@ -104,7 +104,7 @@ Future _serveMainPage(HttpRequest request) {
   }
 }
 
-Future _sendResponse(HttpResponse response, String message) {
+void _sendResponse(HttpResponse response, String message) {
   response
       ..headers.contentType = HTML
       ..headers.set("Cache-Control", "no-cache")
