@@ -20,6 +20,7 @@ Navigate to one of the following URLs
     http://localhost:8080
     http://localhost:8080/_utils/headers
     http://localhost:8080/_utils/environment
+    http://localhost:8080/_utils/version
 
 Memcache sample
 ---------------
