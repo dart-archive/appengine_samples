@@ -71,16 +71,17 @@ void _serveMainPage(HttpRequest request) {
   var users = context.services.users;
 
   if (users.currentUser == null) {
-    return users.createLoginUrl('${request.uri}').then((String url) {
+    users.createLoginUrl('${request.uri}').then((String url) {
       logging.info('Redirecting user to login $url.');
       return request.response.redirect(Uri.parse(url));
     });
+    return;
   }
 
   if (request.method == 'GET') {
     logging.info('Fetch greetings from datastore.');
     var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
-    return query.run().then((List<Greeting> greetings) {
+    query.run().then((List<Greeting> greetings) {
       var renderMap = {
         'entries' : greetings.map(_convertGreeting).toList(),
         'user' : users.currentUser.email,
@@ -89,7 +90,7 @@ void _serveMainPage(HttpRequest request) {
       return _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
     });
   } else {
-    return request.transform(UTF8.decoder).join('').then((String formData) {
+    request.transform(UTF8.decoder).join('').then((String formData) {
       var parms = Uri.splitQueryString(formData);
       var greeting = new Greeting()
           ..parentKey = rootKey
