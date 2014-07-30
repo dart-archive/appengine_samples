@@ -3,15 +3,17 @@
 packages:
   appengine:
     description:
-      path: "../../appengine"
-      relative: true
-    source: path
+      ref: "v0.1"
+      resolved-ref: "6ca8d389e950a1ade508ffd9ba934fe0d6a70155"
+      url: "https://github.com/dart-lang/appengine"
+    source: git
     version: "0.1.0"
   cloud_datastore:
     description:
-      path: "../../cloud_datastore"
-      relative: true
-    source: path
+      ref: "v0.1"
+      resolved-ref: "26bec0d015e0417a8a45c9e189980ae5bf50fc55"
+      url: "https://github.com/dart-lang/cloud_datastore"
+    source: git
     version: "0.1.0"
   crypto:
     description: crypto
@@ -24,12 +26,13 @@ packages:
   http_server:
     description: http_server
     source: hosted
-    version: "0.9.2"
+    version: "0.9.3"
   memcache:
     description:
-      path: "../../memcache"
-      relative: true
-    source: path
+      ref: "v0.1"
+      resolved-ref: "43d2011af4f07abd201bb530cd7c7537b97e5dbc"
+      url: "https://github.com/dart-lang/memcache"
+    source: git
     version: "0.1.0"
   mime:
     description: mime
@@ -42,8 +45,8 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   protobuf:
     description: protobuf
     source: hosted
-    version: "0.3.3"
+    version: "0.3.3+1"

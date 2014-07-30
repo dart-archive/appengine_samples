@@ -2,13 +2,12 @@ name: memcache_sample
 version: 0.1.0
 description: A sample application showing the use of memcache with managed VMs
 dependencies:
-  appengine: any
-  memcache: any
-  mustache: '>=0.1.8 <0.2.0'
-dependency_overrides:
   appengine:
-    path: ../../appengine
-  cloud_datastore:
-    path: ../../cloud_datastore
+    git:
+      url: https://github.com/dart-lang/appengine
+      ref: v0.1
   memcache:
-    path: ../../memcache
+    git:
+      url: https://github.com/dart-lang/memcache
+      ref: v0.1
+  mustache: '>=0.1.8 <0.2.0'

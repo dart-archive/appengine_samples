@@ -2,11 +2,7 @@ name: simple_request_response_sample
 version: 0.1.0
 description: A sample application only serving client requests.
 dependencies:
-  appengine: any
-dependency_overrides:
   appengine:
-    path: ../../appengine
-  cloud_datastore:
-    path: ../../cloud_datastore
-  memcache:
-    path: ../../memcache
+    git:
+      url: https://github.com/dart-lang/appengine
+      ref: v0.1
