@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
@@ -41,6 +42,32 @@ void _printVersion(HttpRequest request) {
   });
 }
 
+void _printModules(HttpRequest request) {
+  var modules = context.services.modules;
+  request.drain().then((_) {
+    var futures = [
+        modules.defaultVersion(modules.currentModule),
+        modules.hostname(modules.currentModule,
+                         modules.currentVersion,
+                         modules.currentInstance),
+        modules.hostname(modules.currentModule,
+                         null,
+                         null)
+    ];
+    Future.wait(futures).then((results) {
+      var buffer = new StringBuffer();
+      buffer
+          ..writeln('Module: ${modules.currentModule}')
+          ..writeln('Version: ${modules.currentVersion}')
+          ..writeln('Instance: ${modules.currentInstance}')
+          ..writeln('Default version: ${results[0]}')
+          ..writeln('Hostname: ${results[1]}')
+          ..writeln('Hostname: ${results[2]}');
+      _sendResponse(request.response, HttpStatus.OK, buffer.toString());
+    });
+  });
+}
+
 void _defaultHandler(HttpRequest request) {
   request.drain().then((_) {
     _sendResponse(request.response,
@@ -67,6 +94,8 @@ void _requestHandler(HttpRequest request) {
     _printEnvironment(request);
   } else if (request.uri.path == '/_utils/version') {
     _printVersion(request);
+  } else if (request.uri.path == '/_utils/modules') {
+    _printModules(request);
   } else {
     _defaultHandler(request);
   }

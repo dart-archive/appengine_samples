@@ -8,9 +8,6 @@ vm: true
 api_version: 1
 threadsafe: true
 
-vm_settings:
-  has_docker_image: true
-
 manual_scaling:
   instances: 1
 

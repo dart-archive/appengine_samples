@@ -2,15 +2,13 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-version: 1
-runtime: contrib-dart
-vm: true
-api_version: 1
-threadsafe: true
+dispatch:
+  - url: "*/module1/*"
+    module: module1
 
-manual_scaling:
-  instances: 1
+  - url: "*/module2/*"
+    module: module2
 
-handlers:
-- url: /.*
-  script: bin/server.dart
+  - url: "*/*"
+    module: default
+
