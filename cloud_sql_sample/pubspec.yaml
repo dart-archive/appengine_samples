@@ -1,0 +1,18 @@
+name: cloud_sql_sample
+version: 0.1.0
+description: A sample application showing the use of Cloud SQL
+dependencies:
+  appengine:
+    git:
+      url: https://github.com/dart-lang/appengine
+      ref: v0.1
+  cloud_datastore:
+    git:
+      url: https://github.com/dart-lang/cloud_datastore
+      ref: v0.1
+  memcache:
+    git:
+      url: https://github.com/dart-lang/memcache
+      ref: v0.1
+  mustache: '>=0.1.8 <0.2.0'
+  sqljocky: ">=0.11.0 <0.12.0"

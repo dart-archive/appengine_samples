@@ -48,6 +48,19 @@ Navigate to:
 
     http://localhost:8080
 
+Cloud SQL sample
+----------------------
+This sample shows use of the usage of Cloud SQL with Dart. First the setup
+instructions in cloud_sql_sample/README.md must be followed. Afterwards the
+application can be started using
+
+    $ gcloud preview app run <path to app.yaml>
+
+Navigate to:
+
+    http://localhost:8080
+
+
 Modules sample
 --------------
 This sample shows use of modules and the modules API. It has three modules,
