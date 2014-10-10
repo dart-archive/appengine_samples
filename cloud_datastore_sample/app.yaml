@@ -2,7 +2,7 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-version: cloud_datastore_sample
+version: cloud-datastore-sample
 runtime: contrib-dart
 vm: true
 api_version: 1
