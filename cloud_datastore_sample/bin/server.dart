@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:appengine/appengine.dart';
-import 'package:cloud_datastore/cloud_datastore.dart';
+import 'package:gcloud/db.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
 final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
@@ -42,20 +42,16 @@ Map _convertGreeting(Greeting g) {
   return {'date' : g.date, 'author' : g.author, 'content' : g.content};
 }
 
-@ModelMetadata(const GreetingDesc())
+@Kind()
 class Greeting extends Model {
+  @StringProperty()
   String author;
+
+  @StringProperty()
   String content;
+
+  @DateTimeProperty()
   DateTime date;
-}
-
-class GreetingDesc extends ModelDescription {
-  final id = const IntProperty();
-  final author = const StringProperty();
-  final content = const StringProperty();
-  final date = const DateTimeProperty();
-
-  const GreetingDesc() : super('Greeting');
 }
 
 void _serveMainPage(HttpRequest request) {
@@ -81,7 +77,7 @@ void _serveMainPage(HttpRequest request) {
   if (request.method == 'GET') {
     logging.info('Fetch greetings from datastore.');
     var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
-    query.run().then((List<Greeting> greetings) {
+    query.run().toList().then((List<Greeting> greetings) {
       var renderMap = {
         'entries' : greetings.map(_convertGreeting).toList(),
         'user' : users.currentUser.email,
