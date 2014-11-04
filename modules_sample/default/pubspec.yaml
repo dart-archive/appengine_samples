@@ -1,8 +1,5 @@
 name: modules_sample
-version: 0.1.0
+version: 0.2.0
 description: A sample application only serving client requests.
 dependencies:
-  appengine:
-    git:
-      url: https://github.com/dart-lang/appengine
-      ref: v0.1
+  appengine: '>=0.2.1 <0.3.0'

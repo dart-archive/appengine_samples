@@ -1,5 +1,7 @@
 # Usage of the cloud_sql_sample
 
+This sample shows the usage of Cloud SQL with Dart.
+
 ## Setup of CloudSQL or local MySQL database
 
 ### Google Cloud SQL instance
@@ -92,3 +94,12 @@ Bye
 
 In order to run the example, `bin/server.dart` must be changed with the correct
 IP address and password (see the `<please-fill-in>` markers in the code).
+
+Afterwards the application can be started using
+
+    $ gcloud preview app run app.yaml
+
+Navigate to:
+
+    http://localhost:8080
+

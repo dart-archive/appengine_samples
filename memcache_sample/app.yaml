@@ -3,7 +3,7 @@
 # BSD-style license that can be found in the LICENSE file.
 
 version: memcache-sample
-runtime: contrib-dart
+runtime: custom
 vm: true
 api_version: 1
 threadsafe: true

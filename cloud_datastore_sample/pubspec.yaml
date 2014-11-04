@@ -1,16 +1,7 @@
 name: cloud_datastore_sample
-version: 0.1.0
+version: 0.2.0
 description: A sample application showing the use of Cloud Datastore
 dependencies:
-  appengine: '>=0.2.0 <0.3.0'
+  appengine: '>=0.2.1 <0.3.0'
   gcloud: '>=0.1.0 <0.2.0'
   mustache: '>=0.1.8 <0.2.0'
-dependency_overrides:
-  appengine:
-    git:
-      url: https://github.com/dart-lang/appengine
-      ref: staging
-  memcache:
-    git:
-      url: https://github.com/dart-lang/memcache
-      ref: v0.1
