@@ -1,0 +1,5 @@
+name: helloworld
+version: 0.1.0
+author: Dart Team
+dependencies:
+  appengine: '>=0.2.1 <0.3.0'

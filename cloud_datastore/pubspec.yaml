@@ -1,0 +1,7 @@
+name: cloud_datastore
+version: 0.2.0
+description: A sample application showing the use of Cloud Datastore
+dependencies:
+  appengine: '>=0.2.1 <0.3.0'
+  gcloud: '>=0.1.0 <0.2.0'
+  mustache: '>=0.1.8 <0.2.0'

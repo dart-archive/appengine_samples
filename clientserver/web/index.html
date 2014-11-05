@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Items</title>
+    
+    <script async type="application/dart" src="index.dart"></script>
+    <script async src="packages/browser/dart.js"></script>
+    
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <h1>Items</h1>
+    <table id='items'></table>
+    <br>
+    <div>
+      Create new item: <input id="name" type="text" autocomplete="off"/>
+    <input id="create" type="button" value="Create"/>
+    </div>
+    <br>
+    <div id="error">
+      <p id="error_text"></p>
+    </div>
+  </body>
+</html>
