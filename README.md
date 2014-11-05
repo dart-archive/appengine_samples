@@ -11,8 +11,9 @@ This repository contains the following set of samples:
   * **hello_world**: Shows a simple hello world app
   * **memcache**: Shows how to use the memcache API
   * **modules**: Shows how to separate an application into several modules
+  * **simple_request_response**: Shows a how to access environment/version/modules
 
-To get started, try out the [hello_world](https://github.com/dart-lang/appengine_samples/tree/master/hello_world) sample app.
+To get started, try out the [helloworld](https://github.com/dart-lang/appengine_samples/tree/master/helloworld) sample app.
 
 Note: Before running a sample make sure to execute
 
