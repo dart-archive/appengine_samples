@@ -1,4 +1,4 @@
-name: memcache
+name: memcache_sample
 version: 0.2.0
 description: A sample application showing the use of memcache with managed VMs
 dependencies:
