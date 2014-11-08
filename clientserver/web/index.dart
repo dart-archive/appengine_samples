@@ -14,7 +14,7 @@ void main() {
   nameInput = querySelector("#name");
   itemsTable = querySelector("#items");
   errorMessage = querySelector("#error_text");
-  
+
   restGet('/items').then((result) {
     result.forEach((json) => addItem(Item.deserialize(json)));
   });
@@ -25,7 +25,7 @@ void addItem(Item item) {
   var cell = new TableCellElement();
   cell.text = item.name;
   row.children.add(cell);
-  itemsTable.children.add(row);  
+  itemsTable.children.add(row);
 }
 
 void onCreate(MouseEvent event) {

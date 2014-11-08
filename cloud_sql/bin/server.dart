@@ -43,14 +43,14 @@ final MAIN_PAGE = mustache.parse('''
 
 Greeting _row2Greeting(Row row) {
   return new Greeting()
-    ..id = row.id
-    ..author = row.author
-    ..content = row.content
-    ..date = row.date;
+      ..id = row.id
+      ..author = row.author
+      ..content = row.content
+      ..date = row.date;
 }
 
 Map _convertGreeting(Greeting g) {
-  return {'date' : g.date, 'author' : g.author, 'content' : g.content};
+  return {'date': g.date, 'author': g.author, 'content': g.content};
 }
 
 class Greeting {
@@ -94,7 +94,7 @@ void _serveMainPage(ConnectionPool pool, HttpRequest request) {
       var parms = Uri.splitQueryString(formData);
       var greeting = new Greeting()
           ..author = parms['author'] + ' (${users.currentUser.email})'
-          ..content  = parms['text']
+          ..content = parms['text']
           ..date = new DateTime.now();
       logging.info('Store greeting to SQL server ...');
 

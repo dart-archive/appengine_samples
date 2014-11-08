@@ -39,7 +39,7 @@ final MAIN_PAGE = mustache.parse('''
 ''');
 
 Map _convertGreeting(Greeting g) {
-  return {'date' : g.date, 'author' : g.author, 'content' : g.content};
+  return {'date': g.date, 'author': g.author, 'content': g.content};
 }
 
 @Kind()
@@ -79,8 +79,8 @@ void _serveMainPage(HttpRequest request) {
     var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
     query.run().toList().then((List<Greeting> greetings) {
       var renderMap = {
-        'entries' : greetings.map(_convertGreeting).toList(),
-        'user' : users.currentUser.email,
+        'entries': greetings.map(_convertGreeting).toList(),
+        'user': users.currentUser.email,
       };
       logging.info('Sending list of greetings back.');
       return _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
@@ -91,7 +91,7 @@ void _serveMainPage(HttpRequest request) {
       var greeting = new Greeting()
           ..parentKey = rootKey
           ..author = parms['author'] + ' (${users.currentUser.email})'
-          ..content  = parms['text']
+          ..content = parms['text']
           ..date = new DateTime.now();
       logging.info('Store greeting to datastore ...');
       return db.commit(inserts: [greeting]).then((_) {
