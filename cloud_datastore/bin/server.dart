@@ -13,28 +13,28 @@ import 'package:mustache/mustache.dart' as mustache;
 final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
 final MAIN_PAGE = mustache.parse('''
 <html>
+  <head>
+    <title>Greetings page.</title>
+  </head>
   <body>
-    <head>
-      <title>Greetings page.</title>
-    </head>
+    <div>
+      <h1>Greetings from db :) [user: {{user}}]</h1>
+      {{#entries}}
+        <div style="border: 1px solid gray; margin: 10px;">
+          Author: {{author}}<br />
+          Date: {{date}}<br />
+          Message:<br />
+          <pre>{{content}}</pre>
+        </div>
+      {{/entries}}
+      <br /><br />
+      <form method="POST">
+        Author: <input name="author" type="text" /><br/>
+        <textarea name="text" rows="5" cols="60"></textarea><br/>
+        <input type="submit" value="Submit to Guestbook" />
+      </form>
+    </div>
   </body>
-  <div>
-    <h1>Greetings from db :) [user: {{user}}]</h1>
-    {{#entries}}
-      <div style="border: 1px solid gray; margin: 10px;">
-        Author: {{author}}<br />
-        Date: {{date}}<br />
-        Message:<br />
-        <pre>{{content}}</pre>
-      </div>
-    {{/entries}}
-    <br /><br />
-    <form method="POST">
-       Author: <input name="author" type="text" /><br/>
-       <textarea name="text" rows="5" cols="60"></textarea><br/>
-       <input type="submit" value="Submit to Guestbook" />
-    </form>
-  </div>
 </html>
 ''');
 
