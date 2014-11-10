@@ -30,14 +30,13 @@ final _MAIN_PAGE = mustache.parse("""
       <form name="input" action='/clear' method="get">
         <input type="submit" value="Clear all users">
       </form>
-  
+
       <h2>Users:</h2>
       <ul>
         {{#users}}
           <li>{{user}}</li>
         {{/users}}
       </ul>
-      
     </div>
   </body>
 </html>

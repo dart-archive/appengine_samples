@@ -1,6 +1,7 @@
-Client/Server sample
-------------------------------
-This sample shows the basic request handling. Start it locally using:
+Demonstrates JSON communication using a shared data model with Dart on the
+client and server.
+
+To run the sample locally:
 
     $ pub build web
     $ gcloud preview app run app.yaml

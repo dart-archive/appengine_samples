@@ -2,10 +2,12 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-module: module2
+module: module-python
 version: modules
-runtime: contrib-dart
-vm: true
+runtime: python27
 api_version: 1
 threadsafe: true
 
+handlers:
+- url: /.*
+  script: helloworld.application

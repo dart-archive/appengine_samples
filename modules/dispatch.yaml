@@ -3,11 +3,11 @@
 # BSD-style license that can be found in the LICENSE file.
 
 dispatch:
-  - url: "*/module1/*"
-    module: module1
+  - url: "*/module-python/*"
+    module: module-python
 
-  - url: "*/module2/*"
-    module: module2
+  - url: "*/module-dart/*"
+    module: module-dart
 
   - url: "*/*"
     module: default

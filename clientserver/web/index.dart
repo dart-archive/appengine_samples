@@ -1,19 +1,20 @@
+// Copyright (c) 2014, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
-import 'model.dart';
+import 'package:clientserver/model.dart';
 
-var nameInput;
-var itemsTable;
-var errorMessage;
+final nameInput = querySelector("#name");
+final itemsTable = querySelector("#items");
+final errorMessage = querySelector("#error_text");
 
 void main() {
   querySelector("#create")
       ..onClick.listen(onCreate);
-  nameInput = querySelector("#name");
-  itemsTable = querySelector("#items");
-  errorMessage = querySelector("#error_text");
 
   restGet('/items').then((result) {
     result.forEach((json) => addItem(Item.deserialize(json)));
@@ -21,10 +22,10 @@ void main() {
 }
 
 void addItem(Item item) {
-  var row = new TableRowElement();
-  var cell = new TableCellElement();
-  cell.text = item.name;
-  row.children.add(cell);
+  var cell = new TableCellElement()
+      ..text = item.name;
+  var row = new TableRowElement()
+      ..children.add(cell);
   itemsTable.children.add(row);
 }
 

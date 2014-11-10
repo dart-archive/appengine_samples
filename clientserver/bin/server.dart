@@ -9,7 +9,7 @@ import 'dart:io';
 import 'package:gcloud/db.dart';
 import 'package:appengine/appengine.dart';
 
-import '../web/model.dart';
+import 'package:clientserver/model.dart';
 
 Key get itemsRoot => context.services.db.emptyKey.append(ItemsRoot, id: 1);
 
@@ -22,8 +22,8 @@ Future sendJSONResponse(HttpRequest request, json) {
   return request.response.close();
 }
 
-Future readJSONRequest(HttpRequest request)
-  => request.transform(UTF8.decoder).transform(JSON.decoder).first;
+Future readJSONRequest(HttpRequest request) =>
+    request.transform(UTF8.decoder).transform(JSON.decoder).single;
 
 Future<List<Item>> queryItems() {
   var query = context.services.db.query(
@@ -76,6 +76,6 @@ void requestHandler(HttpRequest request) {
   }
 }
 
-main() {
+void main() {
   runAppEngine(requestHandler);
 }

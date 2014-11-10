@@ -11,36 +11,67 @@ import 'package:gcloud/db.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
 final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
+
 final MAIN_PAGE = mustache.parse('''
 <html>
   <head>
     <title>Greetings page.</title>
   </head>
   <body>
-    <div>
-      <h1>Greetings from db :) [user: {{user}}]</h1>
-      {{#entries}}
-        <div style="border: 1px solid gray; margin: 10px;">
-          Author: {{author}}<br />
-          Date: {{date}}<br />
-          Message:<br />
-          <pre>{{content}}</pre>
-        </div>
-      {{/entries}}
-      <br /><br />
-      <form method="POST">
-        Author: <input name="author" type="text" /><br/>
-        <textarea name="text" rows="5" cols="60"></textarea><br/>
-        <input type="submit" value="Submit to Guestbook" />
-      </form>
-    </div>
+    <head>
+      <title>Dart Datastore Sample</title>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
+      <style>
+        body {
+          padding: 24px;
+        }
+        label {
+          display: block;
+          font-weight: normal;
+        }
+        input, textarea, label {
+          margin-top: 8px;
+        }
+        .post {
+          margin-top: 8px;
+          padding: 10px;
+          background: lightgray;
+        }
+      </style>
+    </head>
   </body>
+  <div class='container'>
+    <p class='lead'>Current user: {{user}}</p>
+    <form role='form' class="form-horizontal" method="POST">
+      <div class="form-group">
+        <label for="author" class="col-sm-2 control-label">Author</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name='author' placeholder="Author">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="text" class="col-sm-2 control-label">Message</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" name="text" rows="5"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">Sign the Guestbook</button>
+        </div>
+      </div>
+    </form>
+    {{#entries}}
+      <div class="post">
+        Author: {{author}}<br />
+        Date: {{date}}<br />
+        Message:<br />
+        <pre>{{content}}</pre>
+      </div>
+    {{/entries}}
+  </div>
 </html>
 ''');
-
-Map _convertGreeting(Greeting g) {
-  return {'date': g.date, 'author': g.author, 'content': g.content};
-}
 
 @Kind()
 class Greeting extends Model {
@@ -79,7 +110,7 @@ void _serveMainPage(HttpRequest request) {
     var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
     query.run().toList().then((List<Greeting> greetings) {
       var renderMap = {
-        'entries': greetings.map(_convertGreeting).toList(),
+        'entries': greetings,
         'user': users.currentUser.email,
       };
       logging.info('Sending list of greetings back.');
