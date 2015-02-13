@@ -14,32 +14,28 @@ final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
 
 final MAIN_PAGE = mustache.parse('''
 <html>
-  <head>
-    <title>Greetings page.</title>
-  </head>
-  <body>
-    <head>
-      <title>Dart Datastore Sample</title>
-      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
-      <style>
-        body {
-          padding: 24px;
-        }
-        label {
-          display: block;
-          font-weight: normal;
-        }
-        input, textarea, label {
-          margin-top: 8px;
-        }
-        .post {
-          margin-top: 8px;
-          padding: 10px;
-          background: lightgray;
-        }
-      </style>
-    </head>
-  </body>
+<head>
+  <title>Dart Datastore Sample</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 24px;
+    }
+    label {
+      display: block;
+      font-weight: normal;
+    }
+    input, textarea, label {
+      margin-top: 8px;
+    }
+    .post {
+      margin-top: 8px;
+      padding: 10px;
+      background: lightgray;
+    }
+  </style>
+</head>
+<body>
   <div class='container'>
     <p class='lead'>Current user: {{user}}</p>
     <form role='form' class="form-horizontal" method="POST">
@@ -62,14 +58,15 @@ final MAIN_PAGE = mustache.parse('''
       </div>
     </form>
     {{#entries}}
-      <div class="post">
-        Author: {{author}}<br />
-        Date: {{date}}<br />
-        Message:<br />
-        <pre>{{content}}</pre>
-      </div>
+    <div class="post">
+      Author: {{author}}<br />
+      Date: {{date}}<br />
+      Message:<br />
+      <pre>{{content}}</pre>
+    </div>
     {{/entries}}
   </div>
+</body>
 </html>
 ''');
 
