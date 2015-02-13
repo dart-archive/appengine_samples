@@ -69,23 +69,18 @@ mysql>
 
 Before our Dart application can query and modify data you need to create a
 database and tables.
-This can be easily done with the MySQL prompt:
+This can be easily done by copying-and-pasting the following script in at the MySQL prompt:
 
 ```
-mysql> CREATE DATABASE greetingsdb;
-Query OK, 1 row affected (0.00 sec)
-mysql> USE greetingsdb;
-Database changed.
-mysql> CREATE TABLE greetings (
-    ->   id INTEGER NOT NULL AUTO_INCREMENT,
-    ->   author VARCHAR(255) NOT NULL,
-    ->   content LONGTEXT NOT NULL,
-    ->   date DATETIME NOT NULL,
-    ->   PRIMARY KEY(id)
-    -> );
-Query OK, 0 rows affected (0.00 sec)
-mysql> quit
-Bye
+CREATE DATABASE greetingsdb;
+USE greetingsdb;
+CREATE TABLE greetings (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  author VARCHAR(255) NOT NULL,
+  content LONGTEXT NOT NULL,
+  date DATETIME NOT NULL,
+  PRIMARY KEY(id)
+);
 ```
 
 ## Running the sample
