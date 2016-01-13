@@ -2,7 +2,7 @@ Hello World sample
 ------------------------------
 This sample shows a hello world app. Start it locally using:
 
-    $ gcloud preview app run app.yaml
+    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
 
 Navigate to the following URL:
 

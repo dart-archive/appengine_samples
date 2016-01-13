@@ -2,7 +2,7 @@ This sample shows use of [Google Cloud Datastore][datastore] and the Users API.
 
 To run the sample locally:
 
-    $ gcloud preview app run app.yaml
+    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
 
 Navigate to:
 

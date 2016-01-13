@@ -90,6 +90,8 @@ void _serveMustache(HttpRequest request) {
   });
 }
 
-void main() {
-  runAppEngine(_serveMustache);
+main(List<String> args) {
+  int port = 8080;
+  if (args.length > 0) port = int.parse(args[0]);
+  runAppEngine(_serveMustache, port: port);
 }

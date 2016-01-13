@@ -4,7 +4,7 @@ client and server.
 To run the sample locally:
 
     $ pub build web
-    $ gcloud preview app run app.yaml
+    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
 
 Navigate to the following URL:
 
