@@ -139,6 +139,8 @@ Future _sendResponse(HttpResponse response, String message) {
   return response.close();
 }
 
-void main() {
-  runAppEngine(_serveMainPage);
+main(List<String> args) {
+  int port = 8080;
+  if (args.length > 0) port = int.parse(args[0]);
+  runAppEngine(_serveMainPage, port: port);
 }

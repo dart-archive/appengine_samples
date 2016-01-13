@@ -76,6 +76,8 @@ void requestHandler(HttpRequest request) {
   }
 }
 
-void main() {
-  runAppEngine(requestHandler);
+main(List<String> args) {
+  int port = 8080;
+  if (args.length > 0) port = int.parse(args[0]);
+  runAppEngine(requestHandler, port: port);
 }
