@@ -10,7 +10,64 @@ import 'package:appengine/appengine.dart';
 import 'package:gcloud/db.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
-final HTML = new ContentType('text', 'html', charset: 'charset=utf-8');
+void main() {
+  runAppEngine(_serveMainPage);
+}
+
+@Kind()
+class Greeting extends Model {
+  @StringProperty()
+  String author;
+
+  @StringProperty()
+  String content;
+
+  @DateTimeProperty()
+  DateTime date;
+}
+
+_serveMainPage(HttpRequest request) async {
+  final db = context.services.db;
+  final logging = context.services.logging;
+
+  // We will place all Greeting entries under this key. This allows us to do
+  // strongly consistent ancestor queries as opposed to eventually consistent
+  // queries.
+  final rootKey = db.emptyKey.append(Greeting, id: 1);
+
+  logging.debug('Got request ${request.uri} .');
+
+  if (request.method == 'GET') {
+    logging.info('Fetch greetings from datastore.');
+    final query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
+    final List<Greeting> greetings = await query.run().toList();
+    final renderMap = {
+      'entries': greetings,
+    };
+    logging.info('Sending list of greetings back.');
+    await _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
+  } else {
+    String formData = await request.transform(UTF8.decoder).join('');
+    final parms = Uri.splitQueryString(formData);
+    final greeting = new Greeting()
+      ..parentKey = rootKey
+      ..author = parms['author']
+      ..content = parms['text']
+      ..date = new DateTime.now();
+    logging.info('Store greeting to datastore ...');
+    await db.commit(inserts: [greeting]);
+    await request.response.redirect(request.uri);
+  }
+}
+
+Future _sendResponse(HttpResponse response, String message) {
+  response
+    ..headers.contentType = ContentType.HTML
+    ..headers.set("Cache-Control", "no-cache")
+    ..statusCode = HttpStatus.OK
+    ..add(UTF8.encode(message));
+  return response.close();
+}
 
 final MAIN_PAGE = mustache.parse('''
 <html>
@@ -37,7 +94,6 @@ final MAIN_PAGE = mustache.parse('''
 </head>
 <body>
   <div class='container'>
-    <p class='lead'>Current user: {{user}}</p>
     <form role='form' class="form-horizontal" method="POST">
       <div class="form-group">
         <label for="author" class="col-sm-2 control-label">Author</label>
@@ -69,78 +125,3 @@ final MAIN_PAGE = mustache.parse('''
 </body>
 </html>
 ''');
-
-@Kind()
-class Greeting extends Model {
-  @StringProperty()
-  String author;
-
-  @StringProperty()
-  String content;
-
-  @DateTimeProperty()
-  DateTime date;
-}
-
-void _serveMainPage(HttpRequest request) {
-  var db = context.services.db;
-  var logging = context.services.logging;
-
-  // We will place all Greeting entries under this key. This allows us to do
-  // strongly consistent ancestor queries as opposed to eventually consistent
-  // queries.
-  var rootKey = db.emptyKey.append(Greeting, id: 1);
-
-  logging.debug('Got request ${request.uri} .');
-  var users = context.services.users;
-
-  if (users.currentUser == null) {
-    users.createLoginUrl('${request.uri}').then((String url) {
-      logging.info('Redirecting user to login $url.');
-      return request.response.redirect(Uri.parse(url));
-    });
-    return;
-  }
-
-  if (request.method == 'GET') {
-    logging.info('Fetch greetings from datastore.');
-    var query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
-    query.run().toList().then((List<Greeting> greetings) {
-      var renderMap = {
-        'entries': greetings,
-        'user': users.currentUser.email,
-      };
-      logging.info('Sending list of greetings back.');
-      return _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
-    });
-  } else {
-    request.transform(UTF8.decoder).join('').then((String formData) {
-      var parms = Uri.splitQueryString(formData);
-      var greeting = new Greeting()
-          ..parentKey = rootKey
-          ..author = parms['author'] + ' (${users.currentUser.email})'
-          ..content = parms['text']
-          ..date = new DateTime.now();
-      logging.info('Store greeting to datastore ...');
-      return db.commit(inserts: [greeting]).then((_) {
-        return request.response.redirect(request.uri);
-      });
-    });
-  }
-}
-
-Future _sendResponse(HttpResponse response, String message) {
-  response
-      ..headers.contentType = HTML
-      ..headers.set("Cache-Control", "no-cache")
-      ..statusCode = HttpStatus.OK
-      ..add(UTF8.encode(message));
-
-  return response.close();
-}
-
-main(List<String> args) {
-  int port = 8080;
-  if (args.length > 0) port = int.parse(args[0]);
-  runAppEngine(_serveMainPage, port: port);
-}

@@ -1,9 +1,6 @@
 Memcache sample
 ---------------
-This sample shows use of the Memcache API. Start it locally using:
+This sample shows use of the Memcache API.
 
-    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
-
-Navigate to:
-
-    http://localhost:8080
+To run the sample locally follow the instructions at
+[package:appengine](https://github.com/dart-lang/appengine/blob/master/README.md).

@@ -3,15 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
-
 import 'package:appengine/appengine.dart';
 
-main(List<String> args) {
-  int port = 8080;
-  if (args.length > 0) port = int.parse(args[0]);
+main() async {
+  await runAppEngine(requestHandler);
+}
 
-  runAppEngine((HttpRequest request) {
-    request.response..write('Hello, world!')
-                    ..close();
-  }, port: port);
+requestHandler(HttpRequest request) {
+  request.response
+    ..write('Hello, world!')
+    ..close();
 }

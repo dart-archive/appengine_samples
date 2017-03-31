@@ -1,9 +1,9 @@
+# Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
 name: simple_request_response
+version: 0.2.0
 description: A sample application only serving client requests.
-environment:
-  sdk: '>=1.9.0 <2.0.0'
 dependencies:
-  appengine: '^0.3.0'
-transformers:
-- $dart2js:
-    $exclude: bin/**.dart
+  appengine: '>=0.4.0 <0.5.0'

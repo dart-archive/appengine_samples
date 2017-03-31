@@ -4,6 +4,8 @@
 
 library clientserver.model;
 
+import 'dart:async';
+
 import 'package:gcloud/db.dart';
 
 @Kind()
@@ -24,4 +26,11 @@ class Item extends Model {
   Map serialize() => {'name': name};
 
   static Item deserialize(Map json) => new Item()..name = json['name'];
+}
+
+Key get itemsRoot => dbService.emptyKey.append(ItemsRoot, id: 1);
+
+Future<List<Item>> queryItems() {
+  final query = dbService.query(Item, ancestorKey: itemsRoot)..order('name');
+  return query.run().toList();
 }

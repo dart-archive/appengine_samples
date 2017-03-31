@@ -1,11 +1,10 @@
 Demonstrates JSON communication using a shared data model with Dart on the
 client and server.
 
-To run the sample locally:
+To run the sample locally follow the instructions at
+[package:appengine](https://github.com/dart-lang/appengine/blob/master/README.md)
+and additionally run
 
     $ pub build web
-    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
 
-Navigate to the following URL:
-
-    http://localhost:8080
+to build the client-side application.

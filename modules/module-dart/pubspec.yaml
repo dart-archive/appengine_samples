@@ -1,8 +1,0 @@
-name: modules
-version: 0.2.0
-description: A sample application only serving client requests.
-dependencies:
-  appengine: '^0.3.0'
-transformers:
-- $dart2js:
-    $exclude: bin/**.dart

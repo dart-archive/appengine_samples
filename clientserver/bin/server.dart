@@ -6,78 +6,61 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gcloud/db.dart';
 import 'package:appengine/appengine.dart';
+import 'package:gcloud/db.dart';
 
 import 'package:clientserver/model.dart';
 
-Key get itemsRoot => context.services.db.emptyKey.append(ItemsRoot, id: 1);
+void main() {
+  runAppEngine(requestHandler);
+}
 
-Future sendJSONResponse(HttpRequest request, json) {
-  request.response
-      ..headers.contentType = ContentType.JSON
-      ..headers.set("Cache-Control", "no-cache")
-      ..add(UTF8.encode(JSON.encode(json)));
+Future requestHandler(HttpRequest request) async {
+  if (request.uri.path == '/items') {
+    handleItems(request);
+  } else if (request.uri.path == '/clean') {
+    await handleClean(request);
+    await request.response.redirect(Uri.parse('/index.html'));
+  } else if (request.uri.path == '/') {
+    await request.response.redirect(Uri.parse('/index.html'));
+  } else {
+    await context.assets.serve();
+  }
+}
 
-  return request.response.close();
+Future handleItems(HttpRequest request) async {
+  if (request.method == 'GET') {
+    final List<Item> items = await queryItems();
+    final result = items.map((item) => item.serialize()).toList();
+    final json = {'success': true, 'result': result};
+    await sendJSONResponse(request, json);
+  } else if (request.method == 'POST') {
+    final json = await readJSONRequest(request);
+    final item = Item.deserialize(json)..parentKey = itemsRoot;
+    final error = item.validate();
+    if (error != null) {
+      await sendJSONResponse(request, {'success': false, 'error': error});
+    } else {
+      await dbService.commit(inserts: [item]);
+      await sendJSONResponse(request, {'success': true});
+    }
+  }
+}
+
+Future handleClean(HttpRequest request) async {
+  final items = await queryItems();
+  final deletes = items.map((item) => item.key).toList();
+  return dbService.commit(deletes: deletes);
 }
 
 Future readJSONRequest(HttpRequest request) =>
     request.transform(UTF8.decoder).transform(JSON.decoder).single;
 
-Future<List<Item>> queryItems() {
-  var query = context.services.db.query(
-      Item, ancestorKey: itemsRoot)..order('name');
-  return query.run().toList();
-}
+Future sendJSONResponse(HttpRequest request, json) {
+  request.response
+    ..headers.contentType = ContentType.JSON
+    ..headers.set("Cache-Control", "no-cache")
+    ..add(UTF8.encode(JSON.encode(json)));
 
-handleItems(HttpRequest request) {
-  if (request.method == 'GET') {
-    return queryItems().then((List<Item> items) {
-      var result = items.map((item) => item.serialize()).toList();
-      var json = {'success': true, 'result': result};
-      return sendJSONResponse(request, json);
-    });
-  } else if (request.method == 'POST') {
-    return readJSONRequest(request).then((json) {
-      var item = Item.deserialize(json)..parentKey = itemsRoot;
-      var error = item.validate();
-      if (error != null) {
-        json = {'success': false, 'error': error};
-        return sendJSONResponse(request, json);
-      } else {
-        return context.services.db.commit(inserts: [item]).then((_) {
-          json = {'success': true};
-          return sendJSONResponse(request, json);
-        });
-      }
-    });
-  }
-}
-
-Future handleClean(HttpRequest request) {
-  return queryItems().then((items) {
-    var deletes = items.map((item) => item.key).toList();
-    return context.services.db.commit(deletes: deletes);
-  });
-}
-
-void requestHandler(HttpRequest request) {
-  if (request.uri.path == '/items') {
-    handleItems(request);
-  } else if (request.uri.path == '/clean') {
-    handleClean(request).then((_) {
-      request.response.redirect(Uri.parse('/index.html'));
-    });
-  } else if (request.uri.path == '/') {
-    request.response.redirect(Uri.parse('/index.html'));
-  } else {
-    context.assets.serve();
-  }
-}
-
-main(List<String> args) {
-  int port = 8080;
-  if (args.length > 0) port = int.parse(args[0]);
-  runAppEngine(requestHandler, port: port);
+  return request.response.close();
 }

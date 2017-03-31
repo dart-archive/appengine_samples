@@ -9,6 +9,59 @@ import 'dart:io';
 import 'package:appengine/appengine.dart';
 import 'package:mustache/mustache.dart' as mustache;
 
+void main() {
+  runAppEngine(_serveMustache);
+}
+
+Future _serveMustache(HttpRequest request) async {
+  final logging = context.services.logging;
+  final memcache = context.services.memcache;
+  var users = [];
+
+  final encodedUsers = await memcache.get('users');
+  if (encodedUsers != null) {
+    try {
+      users = JSON.decode(encodedUsers);
+    } catch (err) {
+      logging.error("Error when decoding '$encodedUsers':\n$err");
+    }
+  }
+
+  if (request.uri.path == '/clear') {
+    await memcache.remove('users');
+
+    // Redirect back to the root of the application
+    request.response.redirect(new Uri(path: '/'));
+    return;
+  }
+
+  final newUser = request.uri.queryParameters['user'];
+
+  if (newUser != null && newUser.trim().isNotEmpty) {
+    users.add({'user': newUser});
+
+    // Add the new value to memcache
+    await memcache.set('users', JSON.encode(users));
+
+    // Redirect back to the root of the application
+    await request.response.redirect(new Uri(path: '/'));
+  } else {
+    final body = _MAIN_PAGE.renderString({'users': users});
+    await _sendResponse(request.response, HttpStatus.OK, body);
+  }
+}
+
+Future _sendResponse(HttpResponse response, int statusCode, String message) {
+  final data = UTF8.encode(message);
+  response
+    ..headers.contentType = ContentType.HTML
+    ..headers.set("Cache-Control", "no-cache")
+    ..statusCode = statusCode
+    ..contentLength = data.length
+    ..add(data);
+  return response.close();
+}
+
 final _MAIN_PAGE = mustache.parse("""
 <html>
   <head>
@@ -41,57 +94,3 @@ final _MAIN_PAGE = mustache.parse("""
   </body>
 </html>
 """);
-
-Future _sendResponse(HttpResponse response, int statusCode, String message) {
-  var data = UTF8.encode(message);
-  response
-      ..headers.contentType = new ContentType('text', 'html', charset: 'utf-8')
-      ..headers.set("Cache-Control", "no-cache")
-      ..statusCode = statusCode
-      ..contentLength = data.length
-      ..add(data);
-  return response.close();
-}
-
-void _serveMustache(HttpRequest request) {
-  var logging = context.services.logging;
-  var memcache = context.services.memcache;
-  var users = [];
-
-  memcache.get('users').then((encodedUsers) {
-    if (encodedUsers == null) return;
-    try {
-      users = JSON.decode(encodedUsers);
-    } catch (err) {
-      logging.error("Error when decoding '$encodedUsers':\n$err");
-    }
-  }).then((_) {
-    if (request.uri.path == '/clear') {
-      return memcache.remove('users').then((_) {
-        // redirect back to the root of the application
-        return request.response.redirect(new Uri(path: '/'));
-      });
-    }
-
-    var newUser = request.uri.queryParameters['user'];
-
-    if (newUser != null && newUser.trim().isNotEmpty) {
-      users.add({'user': newUser});
-
-      // add the new value to memcache
-      return memcache.set('users', JSON.encode(users)).then((_) {
-        // redirect back to the root of the application
-        return request.response.redirect(new Uri(path: '/'));
-      });
-    } else {
-      var body = _MAIN_PAGE.renderString({'users': users});
-      return _sendResponse(request.response, HttpStatus.OK, body);
-    }
-  });
-}
-
-main(List<String> args) {
-  int port = 8080;
-  if (args.length > 0) port = int.parse(args[0]);
-  runAppEngine(_serveMustache, port: port);
-}

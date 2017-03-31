@@ -12,55 +12,48 @@ final nameInput = querySelector("#name");
 final itemsTable = querySelector("#items");
 final errorMessage = querySelector("#error_text");
 
-void main() {
-  querySelector("#create")
-      ..onClick.listen(onCreate);
+main() async {
+  querySelector("#create")..onClick.listen(onCreate);
 
-  restGet('/items').then((result) {
-    result.forEach((json) => addItem(Item.deserialize(json)));
-  });
+  final result = await restGet('/items');
+  result.forEach((json) => addItem(Item.deserialize(json)));
 }
 
 void addItem(Item item) {
-  var cell = new TableCellElement()
-      ..text = item.name;
-  var row = new TableRowElement()
-      ..children.add(cell);
+  final cell = new TableCellElement()..text = item.name;
+  final row = new TableRowElement()..children.add(cell);
   itemsTable.children.add(row);
 }
 
-void onCreate(MouseEvent event) {
-  var item = new Item()..name = nameInput.value;
-  var error = item.validate();
+onCreate(MouseEvent event) async {
+  final item = new Item()..name = nameInput.value;
+  final error = item.validate();
   if (error != null) {
     window.alert(error);
   } else {
-    restPost('/items', item.serialize()).then((result) {
-      if (!result['success']) {
-        errorMessage.text = 'Server error: ${result['error']}';
-      } else {
-        errorMessage.text = '';
-        addItem(item);
-      }
-    });
+    final result = await restPost('/items', item.serialize());
+    if (!result['success']) {
+      errorMessage.text = 'Server error: ${result['error']}';
+    } else {
+      errorMessage.text = '';
+      addItem(item);
+    }
   }
 }
 
-Future restGet(String path) {
-  return HttpRequest.getString(path).then((response) {
-    var json = JSON.decode(response);
-    if (json['success']) {
-      errorMessage.text = '';
-      return json['result'];
-    } else {
-      errorMessage.text = 'Server error: ${json['error']}';
-    }
-  });
+Future restGet(String path) async {
+  final response = await HttpRequest.getString(path);
+  final json = JSON.decode(response);
+  if (json['success']) {
+    errorMessage.text = '';
+    return json['result'];
+  } else {
+    errorMessage.text = 'Server error: ${json['error']}';
+  }
 }
 
-Future restPost(String path, json) {
-  return HttpRequest.request(path, method: 'POST', sendData: JSON.encode(json))
-      .then((HttpRequest request) {
-        return JSON.decode(request.response);
-      });
+Future restPost(String path, json) async {
+  final HttpRequest request = await HttpRequest.request(path,
+      method: 'POST', sendData: JSON.encode(json));
+  return JSON.decode(request.response);
 }

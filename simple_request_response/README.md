@@ -1,8 +1,9 @@
 Simple request response sample
 ------------------------------
-This sample shows the basic request handling. Start it locally using:
+This sample shows the basic request handling.
 
-    $ dev_appserver.py --custom_entrypoint "dart bin/server.dart {port}" app.yaml
+To run the sample locally follow the instructions at
+[package:appengine](https://github.com/dart-lang/appengine/blob/master/README.md).
 
 Navigate to one of the following URLs:
 
