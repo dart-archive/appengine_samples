@@ -1,0 +1,19 @@
+# Copyright (c) 2014, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+version: 1
+runtime: contrib-dart
+vm: true
+api_version: 1
+threadsafe: true
+
+vm_settings:
+  has_docker_image: true
+
+manual_scaling:
+  instances: 1
+
+handlers:
+- url: /.*
+  script: bin/server.dart
