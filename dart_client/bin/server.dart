@@ -6,16 +6,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appengine/appengine.dart';
+import 'package:http_server/http_server.dart';
 
 void main() {
   runAppEngine(_requestHandler);
 }
+
+final staticFiles = new VirtualDirectory('build')
+    ..allowDirectoryListing = true;
 
 Future _requestHandler(HttpRequest request) async {
   if (request.uri.path == '/') {
     final location = request.requestedUri.replace(path: '/index.html');
     await request.response.redirect(location);
   } else {
-    await context.assets.serve(request.uri.path);
+    await staticFiles.serveRequest(request);
   }
 }
