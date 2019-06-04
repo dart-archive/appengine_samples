@@ -4,5 +4,14 @@
 
 name: hello_world
 version: 0.1.0
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
 dependencies:
-  appengine: '>=0.4.0 <0.5.0'
+  appengine:
+    git:
+      url: https://github.com/domesticmouse/appengine.git
+      ref: grpc
+
+dev_dependencies:
+  pedantic: ^1.7.0
