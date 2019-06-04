@@ -6,11 +6,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
-import 'package:clientserver/model.dart';
-
-final nameInput = querySelector("#name");
-final itemsTable = querySelector("#items");
+final nameInput = querySelector("#name") as TextInputElement;
+final itemsTable = querySelector("#items") as TableElement;
 final errorMessage = querySelector("#error_text");
+
+class Item {
+  String name;
+
+  static Item deserialize(Map json) => new Item()..name = json['name'];
+
+  String validate() {
+    if (name.isEmpty) return "Name cannot be empty";
+    if (name.length < 3) return "Name cannot be short";
+
+    return null;
+  }
+
+  Map serialize() => {'name': name};
+}
 
 main() async {
   querySelector("#create")..onClick.listen(onCreate);
@@ -43,7 +56,7 @@ onCreate(MouseEvent event) async {
 
 Future restGet(String path) async {
   final response = await HttpRequest.getString(path);
-  final json = JSON.decode(response);
+  final json = jsonDecode(response);
   if (json['success']) {
     errorMessage.text = '';
     return json['result'];
@@ -54,6 +67,6 @@ Future restGet(String path) async {
 
 Future restPost(String path, json) async {
   final HttpRequest request = await HttpRequest.request(path,
-      method: 'POST', sendData: JSON.encode(json));
-  return JSON.decode(request.response);
+      method: 'POST', sendData: jsonEncode(json));
+  return jsonDecode(request.response);
 }
