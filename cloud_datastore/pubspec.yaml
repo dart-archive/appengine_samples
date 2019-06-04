@@ -5,7 +5,17 @@
 name: cloud_datastore
 version: 0.2.0
 description: A sample application showing the use of Cloud Datastore
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
 dependencies:
-  appengine: '>=0.4.0 <0.5.0'
-  gcloud: '>=0.4.0 <0.5.0'
-  mustache: '>=0.1.8 <0.2.0'
+  appengine:
+    git:
+      url: https://github.com/domesticmouse/appengine.git
+      ref: grpc
+  gcloud: ^0.6.0+4
+  http_server: ^0.9.8+1
+  mustache: ^1.1.1
+
+dev_dependencies:
+  pedantic: ^1.7.0
