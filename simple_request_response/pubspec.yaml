@@ -5,5 +5,14 @@
 name: simple_request_response
 version: 0.2.0
 description: A sample application only serving client requests.
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
 dependencies:
-  appengine: '>=0.4.0 <0.5.0'
+  appengine:
+    git:
+      url: https://github.com/domesticmouse/appengine.git
+      ref: grpc
+
+dev_dependencies:
+  pedantic: ^1.7.0
