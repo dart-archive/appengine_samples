@@ -27,6 +27,6 @@ Navigate to the following URL:
 static version of the output from the Dart transformers. Afterwards the
 application can be deployed:
 
-    $ pub build web
+    $ webdev build
     $ gcloud app deploy app.yaml
 
