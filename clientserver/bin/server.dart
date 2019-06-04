@@ -64,7 +64,7 @@ Future sendJSONResponse(HttpRequest request, json) {
   request.response
     ..headers.contentType = ContentType.json
     ..headers.set("Cache-Control", "no-cache")
-    ..add(utf8.encode(json.encode(json)));
+    ..add(utf8.encode(jsonEncode(json)));
 
   return request.response.close();
 }
