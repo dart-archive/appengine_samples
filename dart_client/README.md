@@ -23,9 +23,9 @@ Navigate to the following URL:
 
     http://localhost:8080
 
-`pub build` needs to be called before deploying the application to create a
+`webdev build` needs to be called before deploying the application to create a
 static version of the output from the Dart transformers. Afterwards the
-application can be deployed:
+application can be deployed with `gcloud app deploy`:
 
     $ webdev build
     $ gcloud app deploy app.yaml
