@@ -23,10 +23,11 @@ Navigate to the following URL:
 
     http://localhost:8080
 
-`webdev build` needs to be called before deploying the application to create a
-static version of the output from the Dart transformers. Afterwards the
-application can be deployed with `gcloud app deploy`:
+`pub run build_runner build` needs to be called before deploying the 
+application to create a static version of the output from the Dart 
+transformers. Afterwards the application can be deployed with 
+`gcloud app deploy`:
 
-    $ webdev build
+    $ pub run build_runner build
     $ gcloud app deploy app.yaml
 
