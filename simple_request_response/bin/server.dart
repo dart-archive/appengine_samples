@@ -33,7 +33,7 @@ _printHeaders(HttpRequest request) async {
   headers.forEach((String name, List<String> values) {
     buffer.writeln("  $name : [${values.join(', ')}]");
   });
-  _sendResponse(request.response, HttpStatus.OK, buffer.toString());
+  _sendResponse(request.response, HttpStatus.ok, buffer.toString());
 }
 
 _printEnvironment(HttpRequest request) async {
@@ -43,7 +43,7 @@ _printEnvironment(HttpRequest request) async {
   for (var key in Platform.environment.keys) {
     buffer.writeln('$key="${Platform.environment[key]}"');
   }
-  _sendResponse(request.response, HttpStatus.OK, buffer.toString());
+  _sendResponse(request.response, HttpStatus.ok, buffer.toString());
 }
 
 _printVersion(HttpRequest request) async {
@@ -53,23 +53,23 @@ _printVersion(HttpRequest request) async {
     ..writeln('Dart version: ${Platform.version}')
     ..writeln('Dart executable: ${Platform.executable}')
     ..writeln('Dart executable arguments: ${Platform.executableArguments}');
-  _sendResponse(request.response, HttpStatus.OK, buffer.toString());
+  _sendResponse(request.response, HttpStatus.ok, buffer.toString());
 }
 
 _defaultHandler(HttpRequest request) async {
   await request.drain();
 
-  _sendResponse(request.response, HttpStatus.NOT_FOUND,
+  _sendResponse(request.response, HttpStatus.notFound,
       "Hello world from dart application.");
 }
 
 _sendResponse(HttpResponse response, int statusCode, String message) async {
-  final data = UTF8.encode(message);
+  final data = utf8.encode(message);
   response
-    ..headers.contentType = ContentType.TEXT
+    ..headers.contentType = ContentType.text
     ..headers.set("Cache-Control", "no-cache")
     ..statusCode = statusCode
     ..contentLength = data.length
-    ..add(data)
-    ..close();
+    ..add(data);
+    await response.close();
 }

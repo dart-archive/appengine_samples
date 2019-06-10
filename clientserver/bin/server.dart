@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:appengine/appengine.dart';
 import 'package:gcloud/db.dart';
+import 'package:http_server/http_server.dart';
 
 import 'package:clientserver/model.dart';
 
@@ -15,16 +16,19 @@ void main() {
   runAppEngine(requestHandler);
 }
 
+final staticFiles = new VirtualDirectory('build')
+    ..allowDirectoryListing = true;
+
 Future requestHandler(HttpRequest request) async {
   if (request.uri.path == '/items') {
-    handleItems(request);
+    await handleItems(request);
   } else if (request.uri.path == '/clean') {
     await handleClean(request);
     await request.response.redirect(Uri.parse('/index.html'));
   } else if (request.uri.path == '/') {
     await request.response.redirect(Uri.parse('/index.html'));
   } else {
-    await context.assets.serve();
+    await staticFiles.serveRequest(request);
   }
 }
 
@@ -54,13 +58,13 @@ Future handleClean(HttpRequest request) async {
 }
 
 Future readJSONRequest(HttpRequest request) =>
-    request.transform(UTF8.decoder).transform(JSON.decoder).single;
+    request.transform(utf8.decoder).transform(json.decoder).single;
 
 Future sendJSONResponse(HttpRequest request, json) {
   request.response
-    ..headers.contentType = ContentType.JSON
+    ..headers.contentType = ContentType.json
     ..headers.set("Cache-Control", "no-cache")
-    ..add(UTF8.encode(JSON.encode(json)));
+    ..add(utf8.encode(jsonEncode(json)));
 
   return request.response.close();
 }

@@ -17,7 +17,7 @@ class Item extends Model {
   String name;
 
   String validate() {
-    if (name.length == 0) return "Name cannot be empty";
+    if (name.isEmpty) return "Name cannot be empty";
     if (name.length < 3) return "Name cannot be short";
 
     return null;
@@ -31,6 +31,7 @@ class Item extends Model {
 Key get itemsRoot => dbService.emptyKey.append(ItemsRoot, id: 1);
 
 Future<List<Item>> queryItems() {
-  final query = dbService.query(Item, ancestorKey: itemsRoot)..order('name');
+  
+  final query = dbService.query<Item>(ancestorKey: itemsRoot)..order('name');
   return query.run().toList();
 }

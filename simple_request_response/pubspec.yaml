@@ -3,7 +3,13 @@
 # BSD-style license that can be found in the LICENSE file.
 
 name: simple_request_response
-version: 0.2.0
+version: 0.3.0
 description: A sample application only serving client requests.
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
 dependencies:
-  appengine: '>=0.4.0 <0.5.0'
+  appengine: ^0.7.0
+
+dev_dependencies:
+  pedantic: ^1.7.0

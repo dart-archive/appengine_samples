@@ -39,7 +39,7 @@ _serveMainPage(HttpRequest request) async {
 
   if (request.method == 'GET') {
     logging.info('Fetch greetings from datastore.');
-    final query = db.query(Greeting, ancestorKey: rootKey)..order('-date');
+    final query = db.query<Greeting>(ancestorKey: rootKey)..order('-date');
     final List<Greeting> greetings = await query.run().toList();
     final renderMap = {
       'entries': greetings,
@@ -47,7 +47,7 @@ _serveMainPage(HttpRequest request) async {
     logging.info('Sending list of greetings back.');
     await _sendResponse(request.response, MAIN_PAGE.renderString(renderMap));
   } else {
-    String formData = await request.transform(UTF8.decoder).join('');
+    final formData = await request.transform(utf8.decoder).join('');
     final parms = Uri.splitQueryString(formData);
     final greeting = new Greeting()
       ..parentKey = rootKey
@@ -62,14 +62,14 @@ _serveMainPage(HttpRequest request) async {
 
 Future _sendResponse(HttpResponse response, String message) {
   response
-    ..headers.contentType = ContentType.HTML
+    ..headers.contentType = ContentType.html
     ..headers.set("Cache-Control", "no-cache")
-    ..statusCode = HttpStatus.OK
-    ..add(UTF8.encode(message));
+    ..statusCode = HttpStatus.ok
+    ..add(utf8.encode(message));
   return response.close();
 }
 
-final MAIN_PAGE = mustache.parse('''
+final MAIN_PAGE = mustache.Template('''
 <html>
 <head>
   <title>Dart Datastore Sample</title>
